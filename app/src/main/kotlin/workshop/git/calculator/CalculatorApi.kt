@@ -5,5 +5,7 @@ interface CalculatorApi {
 
     suspend fun substract(x: Int, y: Int): CalculationResult
 
+    suspend fun multiply(x: Int, y: Int): CalculationResult
+
     suspend fun divide(x: Int, y: Int): CalculationResult
 }
