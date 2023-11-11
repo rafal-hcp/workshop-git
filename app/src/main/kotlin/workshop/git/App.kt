@@ -3,13 +3,50 @@
  */
 package workshop.git
 
-class App {
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.runBlocking
+import workshop.git.calculator.SimpleCalculator
+import workshop.git.equation.EquationParser
+import workshop.git.equation.StringEquationParser
+import kotlin.system.exitProcess
+
+class App(
+    private val viewModel: CalculatorViewModel,
+    private val equationParser: EquationParser<String>
+) {
     val greeting: String
         get() {
             return "Hello World!"
         }
+
+    fun run() {
+        println(greeting)
+
+        runBlocking {
+
+        print("What to do: ")
+        val input = readlnOrNull() ?: return@runBlocking
+
+        val equation = equationParser.parse(input)
+            viewModel.calculate(equation)
+            viewModel.state.collectLatest {
+                when (it) {
+                    CalculatorViewModel.State.Loading -> {
+                        print("Calculating...")
+                    }
+
+                    is CalculatorViewModel.State.Calculated -> {
+                        print("Result is ${it.result}")
+                        exitProcess(0)
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
+    }
 }
 
 fun main() {
-    println(App().greeting)
+    App(CalculatorViewModel(SimpleCalculator()), StringEquationParser()).run()
 }
