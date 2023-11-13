@@ -5,5 +5,5 @@ do
 	clear
 	echo "Press [CTRL+C] to stop.."
 	git log --decorate --oneline --graph --all
-	sleep 30s
+	sleep 30
 done

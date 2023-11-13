@@ -73,7 +73,31 @@ Use rebase against your HEAD, e.g.
 
 `rebase -i HEAD~X`
 
-And edit selected commit by changing `pick` to `edit`
+And edit selected commit by changing `pick` to `edit`. You may add new files and amend them to the edited commit or split it further by calling `git reset HEAD^` and creating new
+commits.
+
+## Rebase a branch dropping merge commits 
+
+```
+git rebase -i master --reapply-cherry-picks --rebase-merges
+```
+
+## Rebase a branch (B) on top of another branch (A) while diverging from another branch (C)
+
+If you're a C diverged from B but want to rebase onto A you
+can do
+
+```
+rebase -i --onto A B C
+```
+
+## Go back in time
+
+`git reflog` to see all your operations (the full path of your HEAD). `git reset --hard $SHA` to return to that point
+
+## Learn what is my current HEAD
+
+`HEAD` is a symbollic file in `.git`. Call `cat .git/HEAD` to see the ref point or a direct git object if you're in DETACHED state.
 
 ## Learn what's inside .git directory
 
@@ -86,3 +110,13 @@ file tree where directory name is two first characters of the hash and contents 
 
 Objects are either `tree`s (directories) or `blobs` (files). To check the type, use `git
 cat-file -t $SHA-1`
+
+## Restore lost stuff
+
+Use 
+
+```
+$ git fsck --full
+```
+
+to see any lost objects.
